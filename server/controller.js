@@ -35,5 +35,35 @@ req.session.user= {
 res.status(201).send(req.session.user)
 //
 
+  }, 
+  
+  login: async (req, res)=> {
+
+    const {username, password}= req.body
+
+    const db= req.app.get('db')
+
+let foundUser= await db.get_user([username])
+let user= foundUser[0]
+
+if (!user){
+  res.status(401).send("username Not Found")
+}
+
+const isAuthenticated= bcrypt.compareSync(password, user.hash)
+
+if(!isAuthenticated){
+  res.status(403).send("Incorrect Password")
+}
+
+req.session.user= {
+  isAdmin: user.is_admin, 
+  id: user.id, 
+  username: user.username
+
+}
+
+res.status(200).send(req.session.user)
+
   }
 }
