@@ -5,6 +5,9 @@ const {SESSION_SECRET, SERVER_PORT, CONNECTION_STRING}= process.env
 const massive= require('massive')
 const session= require('express-session')
 const controller= require('./controller')
+const treasureController= require('./treasureController')
+
+
 
 app.use(express.json())
 
@@ -26,6 +29,9 @@ massive(CONNECTION_STRING).then((db)=>{
 
 app.post('/auth/register', controller.register)
 app.post('/auth/login', controller.login)
+app.get('/auth/logout', controller.logout)
+
+app.get('/api/treasure/dragon', treasureController.dragonTreasure)
 
 
 app.listen(SERVER_PORT, ()=> console.log('listening on ', SERVER_PORT))
